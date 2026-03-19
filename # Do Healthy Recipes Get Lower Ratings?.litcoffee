@@ -1,10 +1,34 @@
+---
+layout: default
+title: Recipe Ratings Project
+---
+
+<div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border-radius: 12px;">
+
+<h1 style="font-size: 42px; margin-bottom: 10px;">
+Do Healthy Recipes Get Lower Ratings?
+</h1>
+
+<p style="font-size: 18px; opacity: 0.9;">
+A Data Science Investigation using Food.com Data
+</p>
+
+<a href="https://github.com/Raunakss10/Project4" 
+style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: white; color: #2a5298; border-radius: 6px; text-decoration: none; font-weight: bold;">
+View on GitHub
+</a>
+
+</div>
+
+
+
 # Do Healthy Recipes Get Lower Ratings?
 ### A Data Science Investigation of Recipe Tags, Nutrition, and User Preferences
 
 
 ---
 
-## Overview
+## <span style="color:#2a5298;">Overview</span>
 
 This project investigates whether recipes labeled as **healthy** tend to receive lower ratings than other recipes on Food.com. To answer this question, I combined recipe metadata with user interaction data, explored nutritional and structural recipe features, conducted a permutation test, and built predictive regression models for average recipe rating.
 
