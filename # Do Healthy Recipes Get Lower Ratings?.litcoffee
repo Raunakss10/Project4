@@ -144,7 +144,7 @@ This is an important early observation because it suggests that if the healthy t
 
 #### Calories vs Average Rating
 
-![Calories vs Average Rating](assets/calories_vs_rating.png)
+![Calories vs Average Rating](assets:calories_vs_rating.png)
 
 We also examined the relationship between calorie content and average rating. The pattern does not suggest a strong linear relationship. Recipes across a wide range of calorie levels receive both high and low ratings.
 
