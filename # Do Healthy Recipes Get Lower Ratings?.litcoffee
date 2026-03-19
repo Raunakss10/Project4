@@ -1,7 +1,4 @@
----
-layout: default
-title: Do Healthy Recipes Get Lower Ratings?
----
+
 
 <div style="text-align: center; padding: 70px 20px; background: linear-gradient(135deg, #1e3c72, #1b9e77); color: white; border-radius: 14px; margin-bottom: 40px;">
 
