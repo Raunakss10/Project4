@@ -346,6 +346,6 @@ A limitation of the project is that “healthy” was defined using tags rather 
 
 ## <span style="color:#2a5298;">Author</span>
 
-**Raunak Saluja**  
+**Raunak Saluja - Dhruv Mittal**  
 UC San Diego  
-Data Science, Mathematics, and Finance
+Data Science
