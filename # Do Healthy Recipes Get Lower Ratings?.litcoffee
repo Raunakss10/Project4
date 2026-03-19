@@ -1,5 +1,4 @@
-# Do Healthy Recipes Get Lower Ratings?
-
+index.html
 ### A Data Science Investigation of Recipe Tags, Nutrition, and User Preferences  
 **Raunak Saluja and Dhruv Mittal** · UC San Diego
 
