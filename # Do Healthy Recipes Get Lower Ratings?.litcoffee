@@ -335,12 +335,6 @@ On the predictive side, simple baseline models performed poorly, but a Random Fo
 
 A limitation of the project is that “healthy” was defined using tags rather than a rigorous nutrition-based score. Future work could improve this by creating a formal health index, incorporating text features from reviews, or modeling user-specific preferences.
 
----
-
-## <span style="color:#2a5298;">Project Links</span>
-
-- [GitHub Repository](https://github.com/Raunakss10/Project4)
-- [Notebook File](https://github.com/Raunakss10/Project4/blob/main/project4.ipynb)
 
 ---
 
