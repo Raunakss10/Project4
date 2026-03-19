@@ -167,7 +167,7 @@ These aggregates showed that:
 
 ## <span style="color:#d95f02;">Step 3: Assessment of Missingness</span>
 
-We investigated whether missingness in the `rating` variable depends on other observed variables. This helps determine whether the missingness mechanism is more consistent with MCAR, MAR, or MNAR.
+We investigated whether missingness in the `rating` variable depends on other observed variables.
 
 ### NMAR Discussion
 
@@ -193,6 +193,13 @@ Absolute difference in mean `minutes` between rows with missing ratings and rows
 
 </div>
 
+<div style="text-align: center; margin: 30px 0;">
+<img src="missingness_minutes.png" width="72%">
+<p style="color: gray; font-size: 14px;">
+Figure 3: Permutation distribution for the dependence of rating missingness on cooking time.
+</p>
+</div>
+
 #### Interpretation
 The p-value is effectively 0, which is far below 0.05. We reject the null hypothesis and conclude that missingness in `rating` depends on cooking time. This suggests that recipes with missing ratings tend to have systematically different preparation times.
 
@@ -214,6 +221,13 @@ Absolute difference in mean `calories` between rows with missing ratings and row
 - **Observed statistic:** `67.977786093818`
 - **p-value:** `0.0`
 
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+<img src="missingness_calories.png" width="72%">
+<p style="color: gray; font-size: 14px;">
+Figure 4: Permutation distribution for the dependence of rating missingness on calories.
+</p>
 </div>
 
 #### Interpretation
@@ -261,7 +275,7 @@ A more negative value supports the alternative hypothesis.
 <div style="text-align: center; margin: 30px 0;">
 <img src="permutation_distribution.png" width="72%">
 <p style="color: gray; font-size: 14px;">
-Figure 3: Permutation distribution of the difference in average rating between healthy and non-healthy recipes.
+Figure 5: Permutation distribution of the difference in average rating between healthy and non-healthy recipes.
 </p>
 </div>
 
@@ -392,7 +406,7 @@ The most important features in the final model were:
 <div style="text-align: center; margin: 30px 0;">
 <img src="feature_importance.png" width="65%">
 <p style="color: gray; font-size: 14px;">
-Figure 4: Top feature importances from the Random Forest Regressor.
+Figure 6: Top feature importances from the Random Forest Regressor.
 </p>
 </div>
 
@@ -439,6 +453,13 @@ We performed a permutation test by shuffling the healthy/non-healthy labels many
 - **Observed MAE difference (healthy − non-healthy):** `-0.0018342412659773655`
 - **p-value:** `0.4235`
 
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+<img src="fairness_mae.png" width="72%">
+<p style="color: gray; font-size: 14px;">
+Figure 7: Permutation distribution for the fairness analysis using MAE difference.
+</p>
 </div>
 
 ### Interpretation
