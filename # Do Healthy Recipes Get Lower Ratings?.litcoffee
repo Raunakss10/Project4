@@ -11,7 +11,7 @@ A Data Science Investigation of Recipe Tags, Nutrition, and User Preferences
 </p>
 
 <p style="font-size: 17px; margin-top: 18px;">
-<strong>Raunak Saluja</strong> · UC San Diego
+<strong>Raunak Saluja and Dhruv Mittal</strong> · UC San Diego
 </p>
 
 <a href="https://github.com/Raunakss10/Project4"
