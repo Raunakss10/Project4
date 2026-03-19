@@ -1,96 +1,97 @@
 ---
 layout: default
-title: Recipe Ratings Project
+title: Do Healthy Recipes Get Lower Ratings?
 ---
 
-<div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border-radius: 12px;">
+<div style="text-align: center; padding: 70px 20px; background: linear-gradient(135deg, #1e3c72, #1b9e77); color: white; border-radius: 14px; margin-bottom: 40px;">
 
-<h1 style="font-size: 42px; margin-bottom: 10px;">
+<h1 style="font-size: 50px; margin-bottom: 12px; line-height: 1.2;">
 Do Healthy Recipes Get Lower Ratings?
 </h1>
 
-<p style="font-size: 18px; opacity: 0.9;">
-A Data Science Investigation using Food.com Data
+<p style="font-size: 22px; margin-top: 0; opacity: 0.95;">
+A Data Science Investigation of Recipe Tags, Nutrition, and User Preferences
 </p>
 
-<a href="https://github.com/Raunakss10/Project4" 
-style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: white; color: #2a5298; border-radius: 6px; text-decoration: none; font-weight: bold;">
+<p style="font-size: 17px; margin-top: 18px;">
+<strong>Raunak Saluja</strong> · UC San Diego
+</p>
+
+<a href="https://github.com/Raunakss10/Project4"
+style="display: inline-block; margin-top: 22px; padding: 12px 24px; background: white; color: #1e3c72; border-radius: 8px; text-decoration: none; font-weight: 700;">
 View on GitHub
 </a>
 
 </div>
 
+## <span style="color:#e7298a;">TL;DR</span>
 
+<div style="background: #f8f9fa; padding: 20px; border-left: 6px solid #e7298a; margin: 20px 0 35px 0; border-radius: 8px;">
 
-# Do Healthy Recipes Get Lower Ratings?
-### A Data Science Investigation of Recipe Tags, Nutrition, and User Preferences
+- Healthy-tagged recipes were rated **slightly lower on average**
+- The difference was **not statistically significant** at the 5% level
+- A simple baseline model explained almost none of the variation in ratings
+- A Random Forest Regressor with engineered features achieved **Test R² = 0.4008**
+- The strongest predictors were **nutritional density** and **recipe efficiency**, not just the healthy label itself
 
-
----
+</div>
 
 ## <span style="color:#2a5298;">Overview</span>
 
-This project investigates whether recipes labeled as **healthy** tend to receive lower ratings than other recipes on Food.com. To answer this question, I combined recipe metadata with user interaction data, explored nutritional and structural recipe features, conducted a permutation test, and built predictive regression models for average recipe rating.
+This project investigates whether recipes labeled as **healthy** tend to receive lower ratings than other recipes on Food.com. I combined recipe metadata with user interaction data, explored nutritional and structural recipe features, conducted a permutation test, and built regression models to predict average recipe ratings.
 
-The project focuses on two main goals:
+The project has two goals:
 
 1. **Inference:** Determine whether healthy-tagged recipes are rated differently from non-healthy recipes.
-2. **Prediction:** Predict a recipe’s average rating using structured recipe and nutrition-related features.
+2. **Prediction:** Predict a recipe’s average rating using structured recipe and nutrition-based features.
 
 ---
 
-## Introduction
-
-Food ratings are influenced by many factors beyond taste alone. Recipes that are marketed as *healthy* may be perceived as less indulgent, less flavorful, or more restrictive, which could affect how users rate them. At the same time, users may also value healthier meals, especially if they are efficient, practical, and nutritionally balanced.
-
-This project investigates the following research question:
+## <span style="color:#2a5298;">Research Question</span>
 
 > **Do recipes tagged as healthy receive lower average ratings than other recipes?**
 
-To answer this, I use two Food.com datasets:
-
-- **RAW_recipes.csv** — recipe-level metadata such as cooking time, tags, ingredients, and nutrition
-- **interactions.csv** — user-level reviews and ratings for recipes
-
-I also build predictive models to determine how well recipe features can explain variation in ratings.
+This question is interesting because healthy foods are sometimes perceived as less indulgent or less flavorful, which could affect user ratings. At the same time, users may value healthier meals when they are efficient, balanced, and practical. This project studies whether the “healthy” label itself is associated with lower ratings and what recipe features actually matter most for prediction.
 
 ---
 
-## Datasets
+## <span style="color:#2a5298;">Datasets</span>
 
-### 1. Recipes dataset
-This dataset contains recipe-level metadata, including:
+I used two Food.com datasets:
 
-- `name` — recipe name  
-- `id` — recipe ID  
-- `minutes` — preparation time  
-- `submitted` — submission date  
-- `tags` — Food.com tags  
-- `nutrition` — nutritional information  
-- `n_steps` — number of steps  
-- `ingredients` — recipe ingredients  
-- `n_ingredients` — number of ingredients  
+### 1. `RAW_recipes.csv`
+This dataset contains recipe-level information, including:
 
-### 2. Interactions dataset
-This dataset contains user interactions, including:
+- `name` — recipe name
+- `id` — recipe ID
+- `minutes` — preparation time
+- `submitted` — submission date
+- `tags` — Food.com tags
+- `nutrition` — nutritional information
+- `n_steps` — number of preparation steps
+- `ingredients` — ingredients list
+- `n_ingredients` — number of ingredients
 
-- `user_id` — user ID  
-- `recipe_id` — recipe ID  
-- `date` — review date  
-- `rating` — user rating  
-- `review` — review text  
+### 2. `interactions.csv`
+This dataset contains user-level interactions, including:
+
+- `user_id` — user ID
+- `recipe_id` — recipe ID
+- `date` — review date
+- `rating` — user rating
+- `review` — review text
 
 ---
 
-## Data Cleaning and Preparation
+## <span style="color:#1b9e77;">Data Cleaning and Preparation</span>
 
-To prepare the data for analysis, I performed the following steps:
+To prepare the data for analysis, I:
 
-- merged the recipes and interactions datasets using recipe IDs
-- replaced ratings of `0` with `NaN`, since valid ratings are on a 1–5 scale
-- converted `submitted` and `date` to datetime format
-- computed an `average_rating` for each recipe
-- expanded the `nutrition` column into separate numeric columns:
+- merged the recipes and interactions datasets on recipe ID
+- replaced ratings of `0` with `NaN`
+- converted `submitted` and `date` to datetime
+- computed `average_rating` for each recipe
+- split the `nutrition` column into separate numeric columns:
   - `calories`
   - `total_fat_PDV`
   - `sugar_PDV`
@@ -98,13 +99,13 @@ To prepare the data for analysis, I performed the following steps:
   - `protein_PDV`
   - `saturated_fat_PDV`
   - `carbs_PDV`
-- created transformed variables such as:
+- created transformed features such as:
   - `log_minutes`
   - `log_calories`
 
 ### Defining Healthy Recipes
 
-To classify recipes as healthy, I used keyword matching on the `tags` column. A recipe was labeled as healthy if its tags included terms such as:
+I created a boolean feature called `is_healthy_tag` by checking whether a recipe’s tags contain keywords such as:
 
 - `healthy`
 - `low-fat`
@@ -113,26 +114,41 @@ To classify recipes as healthy, I used keyword matching on the `tags` column. A 
 - `high-protein`
 - `low-sugar`
 
-This is a **platform-based definition** of healthy rather than a medical one. That is appropriate here because the goal is to measure how recipes *presented* as healthy are perceived by users.
+This is a tag-based platform definition of “healthy,” rather than a medical definition. That is appropriate here because the project studies how users respond to recipes that are presented as healthy on the platform.
 
 ---
 
-## Exploratory Data Analysis
+## <span style="color:#1b9e77;">Exploratory Data Analysis</span>
 
-I first explored the distributions of key numeric variables such as calories and cooking time. Since both variables were strongly right-skewed, I used log transformations to make the distributions easier to interpret.
+I first explored the distributions of calories and cooking time. Since both variables were strongly right-skewed, I used `log(1 + x)` transformations to make the distributions easier to interpret.
 
-From the exploratory analysis:
+### Distribution of Recipe Calories
 
-- recipe calories are highly skewed, with many lower-calorie recipes and a long right tail
-- cooking time is also right-skewed, with many short-to-moderate recipes and relatively few very long recipes
-- healthy-tagged recipes form only a subset of the overall recipe population
-- the difference in average rating between healthy and non-healthy recipes appears visually small
+<div style="text-align: center; margin: 30px 0;">
+<img src="calories_distribution.png" width="72%">
+<p style="color: gray; font-size: 14px;">
+Figure 1: Distribution of recipe calories after log transformation.
+</p>
+</div>
 
-These observations suggested that any difference in ratings might exist, but is likely modest in magnitude.
+The log-transformed calorie distribution is unimodal and roughly bell-shaped, which shows that the original calorie feature was heavily skewed but becomes much easier to analyze after transformation.
+
+### Distribution of Recipe Cooking Time
+
+<div style="text-align: center; margin: 30px 0;">
+<img src="cooking_time_distribution.png" width="72%">
+<p style="color: gray; font-size: 14px;">
+Figure 2: Distribution of recipe cooking time after log transformation.
+</p>
+</div>
+
+Cooking time is also strongly right-skewed. Most recipes take a relatively short or moderate amount of time, while a smaller number of recipes take much longer.
+
+These plots suggest that transformations are important before modeling and that outliers likely matter when building predictive models.
 
 ---
 
-## Hypothesis Testing
+## <span style="color:#d95f02;">Hypothesis Testing</span>
 
 To test whether healthy-tagged recipes receive lower ratings, I performed a **one-sided permutation test**.
 
@@ -143,29 +159,42 @@ Healthy and non-healthy recipes come from the same distribution of average ratin
 Healthy recipes receive lower average ratings than non-healthy recipes.
 
 ### Test Statistic
+
 \[
 \text{mean average rating of healthy recipes} - \text{mean average rating of non-healthy recipes}
 \]
 
 A more negative value supports the alternative hypothesis.
 
-### Result
+### Actual Results
 
-The observed difference in average rating was slightly negative, indicating that healthy recipes were rated a bit lower on average. However, the p-value was approximately:
+<div style="background: #fff7f0; padding: 18px; border-left: 6px solid #d95f02; margin: 20px 0 30px 0; border-radius: 8px;">
 
-- **p ≈ 0.07**
+- **Observed difference:** `-0.0033591948955473683`
+- **p-value:** `0.06533333333333333`
 
-Since this is greater than the standard significance level of 0.05, I **fail to reject the null hypothesis**.
+</div>
+
+### Permutation Distribution
+
+<div style="text-align: center; margin: 30px 0;">
+<img src="permutation_distribution.png" width="72%">
+<p style="color: gray; font-size: 14px;">
+Figure 3: Permutation distribution of the difference in average rating between healthy and non-healthy recipes.
+</p>
+</div>
 
 ### Interpretation
 
-This means there is **not strong enough statistical evidence** to conclude that healthy-tagged recipes are rated lower. While the observed difference is in the expected direction, the effect is very small and could plausibly be due to chance.
+The observed difference is slightly negative, meaning healthy-tagged recipes were rated a little lower on average. However, the p-value is approximately **0.0653**, which is greater than the conventional significance threshold of 0.05.
+
+Therefore, I **fail to reject the null hypothesis**. The data suggests a small negative association, but the evidence is not strong enough to conclude that healthy-tagged recipes are rated lower.
 
 ---
 
-## Framing a Prediction Problem
+## <span style="color:#7570b3;">Framing a Prediction Problem</span>
 
-In addition to inference, I framed a supervised learning problem where the goal is to predict a recipe’s:
+In addition to inference, I framed a supervised learning problem where the goal is to predict:
 
 - **`average_rating`**
 
@@ -175,28 +204,28 @@ This is a **regression problem**, because the response variable is numeric and c
 Average recipe ratings can take values such as 3.8, 4.2, or 4.75, so the task is to predict a number rather than assign a category.
 
 ### Evaluation Metric
-I used **R²** as the primary metric.
+I used **R²** to evaluate model performance.
 
-R² measures how much of the variation in average recipe rating is explained by the model on unseen test data.
+R² measures how much of the variation in average recipe ratings is explained by the model on unseen test data.
 
 ---
 
-## Baseline Model
+## <span style="color:#7570b3;">Baseline Model</span>
 
-As a baseline, I used simple regression models with a small set of intuitive numeric features:
+As a baseline, I used simple regression models with basic structured recipe features such as:
 
 - `log_minutes`
 - `n_steps`
 - `n_ingredients`
 - `log_calories`
 
-This baseline model performed poorly, with an R² near zero. That result suggests that basic recipe structure alone does not explain much of the variation in average ratings.
+The baseline model performed poorly, with R² near zero. This suggests that simple recipe structure alone explains very little of the variation in recipe ratings.
 
 ---
 
-## Final Model
+## <span style="color:#7570b3;">Final Model</span>
 
-To improve performance, I engineered richer features capturing recipe efficiency and nutritional composition, including:
+To improve performance, I engineered richer features that capture nutritional density and recipe efficiency, including:
 
 - `fat_per_calorie`
 - `protein_per_calorie`
@@ -209,85 +238,117 @@ To improve performance, I engineered richer features capturing recipe efficiency
 - `log_calories`
 - `log_steps`
 
-I then trained a **Random Forest Regressor**, which can capture nonlinear relationships between features and average rating.
+I then trained a **Random Forest Regressor**, which can capture nonlinear relationships between recipe features and average rating.
 
 ### Final Model Performance
 
-The final model achieved approximately:
+<div style="background: #f7f4ff; padding: 18px; border-left: 6px solid #7570b3; margin: 20px 0 30px 0; border-radius: 8px;">
 
-- **Train R² = 0.424**
-- **Test R² = 0.401**
+- **Train R²:** `0.4236028323292136`
+- **Test R²:** `0.40076260064006985`
 
-This is a large improvement over the baseline and indicates that the model explains a meaningful portion of variation in average recipe ratings.
+</div>
+
+This is a major improvement over the baseline and shows that the model explains a meaningful portion of the variation in average recipe ratings.
 
 ---
 
-## Model Validation and Sanity Checks
+## <span style="color:#7570b3;">Model Validation and Sanity Checks</span>
 
-To ensure the model’s performance was reliable, I performed multiple sanity checks.
+I performed several checks to make sure the model was valid.
 
-### 1. Leakage Check
-I removed potentially suspicious features such as `rating_count`. Even without that feature, the model still achieved:
+### Leakage Check
+I removed suspicious features such as `rating_count`, and the model still achieved:
 
-- **R² ≈ 0.401**
+- **R² without leakage:** `0.40076260064006985`
 
-This suggests the model performance is not driven by obvious leakage.
+This suggests that the strong performance is not driven by obvious leakage.
 
-### 2. Train vs Test Performance
+### Baseline Comparison
+A naive model that always predicts the mean rating achieved:
+
+- **Baseline R²:** `-1.7769007223833455e-05`
+
+This confirms that the Random Forest is learning meaningful structure rather than relying on trivial prediction behavior.
+
+### Generalization Check
 The training and test R² values are very close:
 
-- Train R² = 0.424
-- Test R² = 0.401
+- Train R² = `0.4236`
+- Test R² = `0.4008`
 
 This indicates that the model is **not overfitting significantly** and generalizes well.
 
-### 3. Baseline Comparison
-A naive predictor that always predicts the mean rating produced an R² near zero, while the Random Forest performed much better. This confirms that the model is learning meaningful structure rather than relying on trivial prediction behavior.
-
 ---
 
-## Feature Importance
+## <span style="color:#e7298a;">Feature Importance</span>
 
 The most important features in the final model were:
 
-- `fat_per_calorie`
-- `protein_per_calorie`
-- `calories_per_step`
-- `log_calories`
-- `sugar_per_calorie`
-- `steps_per_min`
+1. `fat_per_calorie` — `0.136059`
+2. `protein_per_calorie` — `0.107010`
+3. `calories_per_step` — `0.100194`
+4. `log_calories` — `0.100135`
+5. `sugar_per_calorie` — `0.096890`
+6. `steps_per_min` — `0.084464`
+7. `calories_per_ingredient` — `0.078194`
+8. `ingredients_per_min` — `0.077822`
+9. `log_minutes` — `0.073848`
+10. `log_steps` — `0.053848`
+
+<div style="text-align: center; margin: 30px 0;">
+<img src="feature_importance.png" width="65%">
+<p style="color: gray; font-size: 14px;">
+Figure 4: Top feature importances from the Random Forest Regressor.
+</p>
+</div>
 
 ### Interpretation
 
-These results suggest that both **nutritional density** and **recipe efficiency** matter for user ratings. In particular:
+These results suggest that both **nutritional density** and **recipe efficiency** are important for predicting user ratings.
 
-- nutritional composition appears to play a large role in how users evaluate a recipe
-- users may respond not just to “healthy” labeling, but to how balanced and efficient a recipe appears
-- recipes that deliver more value relative to complexity may be rated more favorably
+In particular:
 
-Importantly, these feature importance rankings are intuitive and consistent with real-world food preferences.
-
----
-
-## Main Findings
-
-The main findings of the project are:
-
-- healthy-tagged recipes were rated slightly lower on average
-- the rating difference was **not statistically significant** at the 5% level
-- simple linear models explained almost none of the variation in ratings
-- a Random Forest Regressor with engineered nutrition and complexity features substantially improved performance
-- the final model achieved **test R² ≈ 0.40**
-- nutritional ratios and efficiency-based features were the strongest predictors of rating
+- nutritional composition matters more than a simple healthy/non-healthy label
+- users may reward recipes that deliver better value relative to their complexity
+- the model is learning intuitive and interpretable relationships rather than relying on one suspicious variable
 
 ---
 
-## Conclusion
+## <span style="color:#2a5298;">Main Findings</span>
 
-In this project, I investigated whether recipes labeled as healthy receive lower ratings than other recipes. Using Food.com recipe and interaction data, I created a healthy-tag indicator, compared ratings with a permutation test, and built predictive models for average recipe rating.
+<div style="background: #eef4ff; padding: 20px; border-left: 6px solid #2a5298; margin: 20px 0 30px 0; border-radius: 8px;">
 
-The inferential result showed that healthy recipes were rated slightly lower on average, but the difference was not statistically significant. This means the data does not provide strong enough evidence to conclude that healthy labeling alone lowers user ratings.
+- Healthy-tagged recipes were rated **slightly lower on average**
+- The difference was **not statistically significant** at the 5% level
+- Simple baseline models explained almost none of the variation in ratings
+- A Random Forest Regressor with engineered features substantially improved predictive performance
+- The final model achieved **Test R² ≈ 0.401**
+- Nutritional ratios and recipe-efficiency features were the strongest predictors of rating
 
-On the predictive side, simple baseline models performed poorly, but a Random Forest Regressor with engineered nutrition and efficiency features explained a meaningful amount of variation in ratings. The final model suggests that nutritional density and recipe complexity are more informative than a simple healthy/non-healthy distinction.
+</div>
 
-A limitation of the project is that “healthy” was defined using tags rather than a rigorous nutritional scoring system. Future work could improve this by constructing a more principled health index, incorporating text features from reviews, or analyzing user-specific preferences.
+---
+
+## <span style="color:#2a5298;">Conclusion</span>
+
+In this project, I investigated whether recipes labeled as healthy receive lower ratings than other recipes. The inferential analysis found a small negative difference in average rating for healthy-tagged recipes, but the p-value was above 0.05, so the evidence was not strong enough to conclude that healthy recipes are rated lower.
+
+On the predictive side, simple baseline models performed poorly, but a Random Forest Regressor with engineered nutritional and efficiency-based features explained a meaningful amount of the variation in recipe ratings. The strongest predictors were not just whether a recipe was tagged as healthy, but how its nutrition and complexity interacted.
+
+A limitation of the project is that “healthy” was defined using tags rather than a rigorous nutrition-based score. Future work could improve this by creating a formal health index, incorporating text features from reviews, or modeling user-specific preferences.
+
+---
+
+## <span style="color:#2a5298;">Project Links</span>
+
+- [GitHub Repository](https://github.com/Raunakss10/Project4)
+- [Notebook File](https://github.com/Raunakss10/Project4/blob/main/project4.ipynb)
+
+---
+
+## <span style="color:#2a5298;">Author</span>
+
+**Raunak Saluja**  
+UC San Diego  
+Data Science, Mathematics, and Finance
