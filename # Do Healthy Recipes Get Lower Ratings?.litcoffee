@@ -157,9 +157,9 @@ Healthy recipes receive lower average ratings than non-healthy recipes.
 
 ### Test Statistic
 
-\[
-\text{mean average rating of healthy recipes} - \text{mean average rating of non-healthy recipes}
-\]
+
+mean average rating of healthy recipes - mean average rating of non-healthy recipes
+
 
 A more negative value supports the alternative hypothesis.
 
